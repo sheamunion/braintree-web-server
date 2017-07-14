@@ -1,1 +1,1 @@
-web: rerun 'ruby app.rb -s Puma'
+web: puma config.ru
