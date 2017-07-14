@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Braintree Playground</title>
+  </head>
+  <body>
+    <h1>Braintree Drop-in V3</h1>
+    <p><a href="https://github.com/braintree/braintree-web-drop-in">See the SDK on GitHub</a></p>
+
+    <div id="dropin-v3-container"></div>
+    <button id="submit-button">Purchase</button>
+    <script src="https://js.braintreegateway.com/web/dropin/1.4.0/js/dropin.min.js"></script>
+    <script>
+      var submitButton = document.querySelector('#submit-button');
+      var client_token = '<%= @token %>';
+
+      braintree.dropin.create(
+        {
+          authorization: client_token,
+          selector: '#dropin-v3-container'
+        },
+        function(err, dropinInstance) {
+          if (err) {
+            // Handle any errors that might've occurred when creating Drop-in
+            console.error(err);
+            return;
+          }
+          submitButton.addEventListener('click', function() {
+            dropinInstance.requestPaymentMethod(function(err, payload) {
+              if (err) {
+                // Handle errors in requesting payment method
+                console.log(err.name + ': ' + err.message);
+                console.error(err);
+              }
+
+              // Send payload.nonce to your server
+              console.info('Got a nonce!');
+              console.log(payload);
+            });
+          });
+        }
+      );
+
+    </script>
+  </body>
+</html>

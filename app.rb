@@ -17,11 +17,17 @@ class MyApp < Sinatra::Base
     erb :index
   end
 
-  get '/token' do
+  get '/dropin-v3' do
     @token = Braintree::ClientToken.generate
-    response.body = {"client_token": "#{@token}"}
     puts(response.inspect)
-    erb :token
+    erb :dropin_v3
+  end
+
+  get '/token' do
+    token = Braintree::ClientToken.generate
+    response.body = token
+    puts(response.inspect)
+    erb :token, :format => :json
   end
 
   post '/transaction' do
