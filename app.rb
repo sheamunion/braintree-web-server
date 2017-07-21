@@ -41,4 +41,17 @@ class MyApp < Sinatra::Base
       )
     erb :result
   end
+
+  post "/webhooks" do
+    webhook_notification = Braintree::WebhookNotification.parse(
+      request.params["bt_signature"],
+      request.params["bt_payload"]
+    )
+
+    # Example values for webhook notification properties
+    puts webhook_notification.kind # "subscription_went_past_due"
+    puts webhook_notification.timestamp # "Sun Jan 1 00:00:00 UTC 2012"
+    puts webhook_notification.merchant_id
+    return 200
+  end
 end
