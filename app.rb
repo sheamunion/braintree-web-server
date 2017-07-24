@@ -49,6 +49,8 @@ class MyApp < Sinatra::Base
     )
     puts @webhook_notification.inspect
 
+    puts @webhook_notification.merchant_account.id
+
     erb :webhook, :locals => {:webhook_notification => @webhook_notification}
   end
 end
