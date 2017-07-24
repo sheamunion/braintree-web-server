@@ -49,11 +49,13 @@ class MyApp < Sinatra::Base
     )
 
     # Example values for webhook notification properties
+    puts "Webhook kind: "
     puts @webhook_notification.kind # "subscription_went_past_due"
+    puts "Webhook timestamp: "
     puts @webhook_notification.timestamp # "Sun Jan 1 00:00:00 UTC 2012"
-    puts @webhook_notification.merchant_id
+    puts "Webhook merchant account: "
+    puts @webhook_notification.merchant_account
 
-    return 200
     erb :webhook
   end
 end
