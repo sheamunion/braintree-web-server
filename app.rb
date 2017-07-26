@@ -49,7 +49,12 @@ class MyApp < Sinatra::Base
     )
     puts @webhook_notification.inspect
 
-    puts @webhook_notification.merchant_account.id
+    case @webhook_notification.kind
+    when Braintree::WebhookNotification::Kind::SubMerchantAccountApproved
+      puts @webhook_notification.merchant_account.id
+    when Braintree::WebhookNotification::Kind::SubscriptionWentActive
+      puts @webhook_notification.subscription.transactions
+    end
 
     erb :webhook, :locals => {:webhook_notification => @webhook_notification}
   end
