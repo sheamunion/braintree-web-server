@@ -51,11 +51,9 @@ class MyApp < Sinatra::Base
     p "nonce is assigned to #{nonce}"
 
     @result = Braintree::PaymentMethod.create(
-      # :cardholder_name => "bippity bop",
       :customer_id => "arenatest",
       :payment_method_nonce => nonce,
       :billing_address => {
-        # :country_name => "United States of America"
         :country_code_alpha2 => "US",
         :postal_code => "99999"
       },
@@ -66,8 +64,8 @@ class MyApp < Sinatra::Base
       :device_data => ""
     )
 
-    if !@result.errors
-      erb :result
+    if @result.success?
+      erb :pm_result
     else
       puts "ERROR: #{@result.inspect}"
       redirect back
