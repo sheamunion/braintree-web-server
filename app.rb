@@ -47,7 +47,7 @@ class MyApp < Sinatra::Base
   post '/pm-create' do
     p "MADE IT TO POST PM CREATE ROUTE"
     p params.inspect
-    nonce = params[:nonce]
+    nonce = params[:payment_method_nonce]
     p "nonce is assigned to #{nonce}"
 
     @result = Braintree::PaymentMethod.create(
