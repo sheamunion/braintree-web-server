@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Braintree Playground</title>
+  </head>
+  <body>
+    <h1>Braintree Drop-in V2</h1>
+    <form id="checkout" action="/pm-create" method="post">
+      <div id="payment-form"></div>
+      <input type="submit" value="Pay $10">
+    </form>
+    <script src="https://js.braintreegateway.com/js/braintree-2.32.1.min.js"></script>
+    <script>
+      var client_token = '<%= @token %>';
+
+      braintree.setup(client_token, 'dropin', {
+        container: 'dropin-container'
+      });
+    </script>
+  </body>
+</html>
