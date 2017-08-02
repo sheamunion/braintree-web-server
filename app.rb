@@ -65,12 +65,12 @@ class MyApp < Sinatra::Base
       },
       :device_data => ""
     )
-    p @result.inspect
 
     if @result.success?
       erb :result
     else
-      erb :hf_v3
+      puts "ERROR: #{@result.inspect}"
+      redirect back
     end
   end
 
