@@ -70,7 +70,7 @@ class MyApp < Sinatra::Base
     if @result.success?
       erb :result
     else
-      erb :hf_v3
+      redirect back
     end
   end
 
