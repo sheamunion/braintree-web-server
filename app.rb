@@ -66,7 +66,7 @@ class MyApp < Sinatra::Base
       :device_data => ""
     )
 
-    if @result.success?
+    if !@result.errors
       erb :result
     else
       puts "ERROR: #{@result.inspect}"
