@@ -19,6 +19,12 @@ class MyApp < Sinatra::Base
     erb :index
   end
 
+  get '/dropin-v2' do
+    @token = Braintree::ClientToken.generate
+    puts(response.inspect)
+    erb :dropin_v2
+  end
+
   get '/dropin-v3' do
     @token = Braintree::ClientToken.generate
     puts(response.inspect)
