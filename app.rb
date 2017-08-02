@@ -84,9 +84,9 @@ class MyApp < Sinatra::Base
   end
 
   post "/webhooks" do
-    p "HERE IS THE RAW REQUEST"
-    p request.params
+    p "HERE IS THE RAW bt_signature"
     p request.params["bt_signature"]
+    p "\n\nHERE IS THE RAW bt_payload"
     p request.params["bt_payload"]
 
     @webhook_notification = Braintree::WebhookNotification.parse(
