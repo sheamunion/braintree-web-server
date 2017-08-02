@@ -1,0 +1,43 @@
+<div class="wrapper">
+  <div class="response container">
+    <div class="content">
+      <% if @result %>
+        <div class="icon">
+          <img src=<%= asset_path("#{@result[:icon]}.svg") %> alt="">
+        </div>
+
+        <h1><%= @result[:header] %></h1>
+        <section>
+          <p><%= @result[:message] %></p>
+        </section>
+      <% else %>
+        <section>
+          <p>Test another transaction or see the Braintree API response.</p>
+      </section>
+
+      <% end %>
+
+      <section>
+        <a class="button primary back" href="/">
+          <span>Test Another Transaction</span>
+        </a>
+      </section>
+    </div>
+  </div>
+</div>
+
+<aside class="drawer dark">
+  <header>
+    <div class="content compact">
+      <a href="https://developers.braintreepayments.com" class="braintree" target="_blank">Braintree</a>
+      <h3>API Response</h3>
+    </div>
+  </header>
+
+  <article class="content compact">
+    <section>
+      <h5>PaymentMethod</h5>
+      <p><%= @result.inspect %></p>
+    </section>
+  </article>
+</aside>
