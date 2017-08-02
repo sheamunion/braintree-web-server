@@ -52,7 +52,7 @@ class MyApp < Sinatra::Base
 
     @result = Braintree::PaymentMethod.create(
       # :cardholder_name => "bippity bop",
-      :customer_id => "apisupport",
+      :customer_id => "arenatest",
       :payment_method_nonce => nonce,
       :billing_address => {
         # :country_name => "United States of America"
