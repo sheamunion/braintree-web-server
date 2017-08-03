@@ -45,6 +45,7 @@ class MyApp < Sinatra::Base
   post "/pm-create" do
     p "MADE IT TO POST PM CREATE ROUTE"
     p params.inspect
+
     nonce = params[:payment_method_nonce]
     p "nonce is assigned to #{nonce}"
 
@@ -86,6 +87,9 @@ class MyApp < Sinatra::Base
   end
 
   post "/webhooks" do
+    p "HERE IS THE WEBHOOK REQEUST FROM BT"
+    p JSON.pretty_generate(request.env)
+
     p "HERE IS THE RAW bt_signature"
     p request.params["bt_signature"]
     p "\n\nHERE IS THE RAW bt_payload"
@@ -106,17 +110,17 @@ class MyApp < Sinatra::Base
       puts @webhook_notification.subscription.transactions
     end
 
-    webhook_log = <<-LOG
-========== Webhook Received ==========
+#    webhook_log = <<-LOG
+#========== Webhook Received ==========
 
-Kind: #{@webhook_notification.kind}
+#Kind: #{@webhook_notification.kind}
 
-Contents: #{@webhook_notification.inspect}
-    LOG
+#Contents: #{@webhook_notification.inspect}
+#    LOG
 
-    File.open("../log/webhooks.log", "a+") do |f|
-      f.write webhook_log
-    end
+#    File.open("../log/webhooks.log", "a+") do |f|
+#      f.write webhook_log
+#    end
 
     return 200
   end
