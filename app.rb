@@ -5,8 +5,6 @@ require "active_record"
 require "base64"
 require "json"
 
-ActiveRecord::Base.establish_connection(ENV["DATABASE_URL"] || "postgres://localhost/mydb")
-
 Dotenv.load
 
 Braintree::Configuration.environment = ENV["BT_ENVIRONMENT"]
@@ -108,6 +106,18 @@ class MyApp < Sinatra::Base
       puts @webhook_notification.subscription.transactions
     end
 
-    erb :webhook, :locals => {:webhook_notification => @webhook_notification}
+    webhook_log = <<-LOG
+========== Webhook Received ==========
+
+Kind: #{@webhook_notification.kind}
+
+Contents: #{@webhook_notification.inspect}
+    LOG
+
+    File.open("./log/webhooks.log", "a+") do |f|
+      f.write webhook_log
+    end
+
+    return 200
   end
 end
