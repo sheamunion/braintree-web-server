@@ -1,50 +1,50 @@
-require 'braintree'
-require 'sinatra/base'
-require 'dotenv'
-require 'active_record'
-require 'base64'
-require 'json'
+require "braintree"
+require "sinatra/base"
+require "dotenv"
+require "active_record"
+require "base64"
+require "json"
 
-ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'] || 'postgres://localhost/mydb')
+ActiveRecord::Base.establish_connection(ENV["DATABASE_URL"] || "postgres://localhost/mydb")
 
 Dotenv.load
 
-Braintree::Configuration.environment = ENV['BT_ENVIRONMENT']
-Braintree::Configuration.merchant_id = ENV['BT_MERCHANT_ID']
-Braintree::Configuration.public_key  = ENV['BT_PUBLIC_KEY']
-Braintree::Configuration.private_key = ENV['BT_PRIVATE_KEY']
+Braintree::Configuration.environment = ENV["BT_ENVIRONMENT"]
+Braintree::Configuration.merchant_id = ENV["BT_MERCHANT_ID"]
+Braintree::Configuration.public_key  = ENV["BT_PUBLIC_KEY"]
+Braintree::Configuration.private_key = ENV["BT_PRIVATE_KEY"]
 
 class MyApp < Sinatra::Base
-  get '/' do
+  get "/" do
     erb :index
   end
 
-  get '/dropin-v2' do
+  get "/dropin-v2" do
     @token = Braintree::ClientToken.generate
     puts(response.inspect)
     erb :dropin_v2
   end
 
-  get '/dropin-v3' do
+  get "/dropin-v3" do
     @token = Braintree::ClientToken.generate
     puts(response.inspect)
     erb :dropin_v3
   end
 
-  get '/hf-v3' do
-    @token = Braintree::ClientToken.generate(:customer_id => "apisupport")
+  get "/hf-v3" do
+    @token = Braintree::ClientToken.generate(:customer_id => "arenatest")
     p JSON.parse(Base64.decode64(@token), symbolize_names: true)
     erb :hf_v3
   end
 
-  get '/token' do
+  get "/token" do
     token = Braintree::ClientToken.generate
     response.body = token
     puts(response.inspect)
     erb :token, :format => :json
   end
 
-  post '/pm-create' do
+  post "/pm-create" do
     p "MADE IT TO POST PM CREATE ROUTE"
     p params.inspect
     nonce = params[:payment_method_nonce]
@@ -72,7 +72,7 @@ class MyApp < Sinatra::Base
     end
   end
 
-  post '/transaction' do
+  post "/transaction" do
     puts "MADE IT TO POST TRANSACTION ROUTE"
     puts params.inspect
     nonce = params[:payment_method_nonce]
