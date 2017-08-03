@@ -114,7 +114,7 @@ Kind: #{@webhook_notification.kind}
 Contents: #{@webhook_notification.inspect}
     LOG
 
-    File.open("./log/webhooks.log", "a+") do |f|
+    File.open("../log/webhooks.log", "a+") do |f|
       f.write webhook_log
     end
 
