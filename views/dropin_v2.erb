@@ -11,13 +11,35 @@
       <div id="dropin-container"></div>
       <input type="submit" value="Pay $10">
     </form>
-    <script src="https://js.braintreegateway.com/js/braintree-2.32.1.min.js"></script>
+    <script src="https://js.braintreegateway.com/js/braintree-2.27.0.min.js"></script>
     <script>
       var client_token = '<%= @token %>';
 
+      // braintree.setup(client_token, 'dropin', {
+      //   container: 'dropin-container'
+      // });
       braintree.setup(client_token, 'dropin', {
-        container: 'dropin-container'
+        container: 'dropin-container',
+        dataCollector: {
+          kount: {environment: 'sandbox'}
+        },
+        onReady: function (braintreeInstance) {
+          var form = document.getElementById('my-form-id');
+          var deviceDataInput = form['device_data'];
+
+          if (deviceDataInput == null) {
+            deviceDataInput = document.createElement('input');
+            deviceDataInput.name = 'device_data';
+            deviceDataInput.type = 'hidden';
+            form.appendChild(deviceDataInput);
+          }
+
+          deviceDataInput.value = braintreeInstance.deviceData;
+        }
+        /* ... */
       });
+
+
     </script>
   </body>
 </html>
