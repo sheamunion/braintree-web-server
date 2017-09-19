@@ -19,19 +19,22 @@ class MyApp < Sinatra::Base
 
   get "/dropin-v2" do
     @token = Braintree::ClientToken.generate
-    puts(response.inspect)
     erb :dropin_v2
   end
 
   get "/dropin-v3" do
     @token = Braintree::ClientToken.generate
-    puts(response.inspect)
     erb :dropin_v3
   end
 
+  get "/hf-v2" do
+    @token = Braintree::ClientToken.generate
+    erb :hf_v2
+  end
+
   get "/hf-v3" do
-    @token = Braintree::ClientToken.generate(:customer_id => "arenatest")
-    p JSON.parse(Base64.decode64(@token), symbolize_names: true)
+    @token = Braintree::ClientToken.generate
+    # p JSON.parse(Base64.decode64(@token), symbolize_names: true)
     erb :hf_v3
   end
 
@@ -49,6 +52,12 @@ class MyApp < Sinatra::Base
     nonce = params[:payment_method_nonce]
     p "nonce is assigned to #{nonce}"
 
+    if params[:device_data]
+      device_data = params[:device_data]
+    else
+      device_data = ""
+    end
+
     @result = Braintree::PaymentMethod.create(
       :customer_id => "arenatest",
       :payment_method_nonce => nonce,
@@ -60,7 +69,7 @@ class MyApp < Sinatra::Base
         :fail_on_duplicate_payment_method => false,
         :verify_card => true
       },
-      :device_data => ""
+      :device_data => device_data
     )
 
     if @result.success?
