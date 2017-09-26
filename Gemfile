@@ -7,3 +7,5 @@ gem 'dotenv'
 gem 'pg'
 gem 'activesupport'
 gem 'activerecord'
+gem 'rack-cors', :require => 'rack/cors'
+
