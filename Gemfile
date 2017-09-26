@@ -7,3 +7,4 @@ gem 'dotenv'
 gem 'pg'
 gem 'activesupport'
 gem 'activerecord'
+
