@@ -8,18 +8,26 @@
   <body>
     <h1>Braintree Drop-in V3</h1>
     <p><a href="https://github.com/braintree/braintree-web-drop-in">See the SDK on GitHub</a></p>
-
+    <form id="payment-form" action="/transactions" method="post">
+      <input type="hidden" id="nonce" name="payment_method_nonce"></input>
+    </form>
     <div id="dropin-v3-container"></div>
     <button id="submit-button">Purchase</button>
-    <script src="https://js.braintreegateway.com/web/dropin/1.4.0/js/dropin.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/dropin/1.5.0/js/dropin.min.js"></script>
     <script>
       var submitButton = document.querySelector('#submit-button');
+      var form = document.getElementById("payment-form");
       var client_token = '<%= @token %>';
 
       braintree.dropin.create(
         {
           authorization: client_token,
-          selector: '#dropin-v3-container'
+          container: '#dropin-v3-container',
+          paypal: {
+            flow: 'checkout',
+            amount: '10.00',
+            currency: 'USD'
+          }
         },
         function(err, dropinInstance) {
           if (err) {
@@ -27,22 +35,42 @@
             console.error(err);
             return;
           }
-          submitButton.addEventListener('click', function() {
+
+          function sendNonceToServer() {
             dropinInstance.requestPaymentMethod(function(err, payload) {
               if (err) {
                 // Handle errors in requesting payment method
+                console.log("got an error:");
                 console.log(err.name + ': ' + err.message);
                 console.error(err);
+                return;
               }
 
               // Send payload.nonce to your server
-              console.info('Got a nonce!');
               console.log(payload);
+              console.log('Got a nonce!');
+              console.log(payload.nonce);
+              document.getElementById("nonce").value = payload.nonce;
+              form.submit();
             });
+          };
+
+          submitButton.addEventListener('click', sendNonceToServer());
+
+          dropinInstance.on('paymentMethodRequestable', function (event) {
+            console.log("here's an event: ");
+            console.log(event);
+            console.log(event.paymentMethodIsSelected);
+            // sendNonceToServer();
+            if (event.paymentMethodIsSelected) {
+              console.log("calling sendNonceToServer...");
+              sendNonceToServer();
+            }
           });
         }
       );
 
     </script>
+    </form>
   </body>
 </html>

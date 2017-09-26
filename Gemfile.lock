@@ -24,7 +24,6 @@ GEM
     pg (0.21.0)
     puma (3.9.1)
     rack (2.0.3)
-    rack-cors (1.0.1)
     rack-protection (2.0.0)
       rack
     sinatra (2.0.0)
@@ -47,7 +46,6 @@ DEPENDENCIES
   dotenv
   pg
   puma
-  rack-cors
   sinatra
 
 RUBY VERSION

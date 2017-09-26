@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Braintree Playground</title>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>Transaction Result</h1>
+          <p>transaction id: <%= p @result_transaction.transaction.id %></p>
+          <pre>
+            <%= @result_transaction.transaction.instance_variables.map do |var|
+                  [var[1..-1].to_sym, instance_variable_get(var)]
+                end.to_h
+            %>
+          </pre>
+      </section>
+    </main>
+  </body>
+</html>

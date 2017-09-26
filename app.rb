@@ -1,9 +1,10 @@
-require "braintree"
-require "sinatra/base"
-require "dotenv"
 require "active_record"
 require "base64"
+require "dotenv"
 require "json"
+require "sinatra/base"
+
+require "braintree"
 
 Dotenv.load
 
@@ -78,19 +79,25 @@ class MyApp < Sinatra::Base
     end
   end
 
-  post "/transaction" do
-    puts "MADE IT TO POST TRANSACTION ROUTE"
+  post "/transactions" do
+    puts "MADE IT TO POST TRANSACTION ROUTE with NONCE:"
     puts params.inspect
     nonce = params[:payment_method_nonce]
 
-    result_transaction = Braintree::Transaction.sale(
-        :amount               => "23",
-        :payment_method_nonce => nonce,
-        :options => {
-          :submit_for_settlement => true
-        }
-      )
-    erb :result
+    @result_transaction = Braintree::Transaction.sale(
+      :amount               => "10.00",
+      :payment_method_nonce => nonce,
+      :options => {
+        :submit_for_settlement => true
+      }
+    )
+
+    if @result_transaction.success?
+      erb :transaction_result
+    else
+      puts "ERROR: #{@result_transaction.inspect}"
+      redirect back
+    end
   end
 
   post "/webhooks" do
