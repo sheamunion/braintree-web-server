@@ -23,6 +23,9 @@
     <script src="https://js.braintreegateway.com/web/3.22.2/js/hosted-fields.min.js"></script>
     <script src="https://js.braintreegateway.com/web/3.22.2/js/data-collector.min.js"></script>
 
+    <!-- Load Apple Pay component. -->
+    <script src="https://js.braintreegateway.com/web/3.22.2/js/apple-pay.min.js"></script>
+
     <!-- Load PayPal's checkout.js Library. -->
     <script src="https://www.paypalobjects.com/api/checkout.js" data-version-4 log-level="warn"></script>
 
@@ -34,6 +37,14 @@
       var submit = document.querySelector('input[type="submit"]');
       var client_token = '<%= @token %>';
 
+      if (!window.ApplePaySession) {
+          console.error('This device does not support Apple Pay');
+      }
+
+      if (!ApplePaySession.canMakePayments()) {
+          console.error('This device is not capable of making Apple Pay payments');
+      }
+
       braintree.client.create({
         authorization: client_token
       }, function (clientErr, clientInstance) {
@@ -41,6 +52,30 @@
           console.error(clientErr);
           return;
         }
+
+        braintree.applePay.create({
+          client: clientInstance
+        }, function (applePayErr, applePayInstance) {
+          if (applePayErr) {
+            console.error('Error creating applePayInstance:', applePayErr);
+            return;
+          }
+
+          // Alternatively, check if the device has an Apple Pay card available.
+          // You can do this if your checkout flow defaults to Apple Pay
+          // or if you are displaying Apple Pay buttons on a product detail page.
+
+          // Use your Apple Pay merchant identifier
+          // to check if payments can be made.
+
+          var promise = ApplePaySession.canMakePaymentsWithActiveCard(applePayInstance.merchantIdentifier);
+          promise.then(function (canMakePaymentsWithActiveCard) {
+            if (canMakePaymentsWithActiveCard) {
+              // Set up Apple Pay buttons
+            }
+          });
+        });
+
         braintree.dataCollector.create({
           client: clientInstance,
           kount: true
@@ -62,6 +97,7 @@
 
           deviceDataInput.value = dataCollectorInstance.deviceData;
         });
+
         braintree.paypalCheckout.create({
           client: clientInstance
         }, function (paypalCheckoutErr, paypalCheckoutInstance) {
